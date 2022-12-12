@@ -39,8 +39,29 @@ def apply_permutation(perm: list, A: list) -> list:
             next_iteration = temp
     return A
 
+def intToRoman(num):
+    """
+    :type num: int
+    :rtype: str
+    """
+    result = []
+    integer_to_roman = {1000: "M", 900: "CM", 500: "D", 400: "CD", 100: "C", 90: "XC", 50: "L", 40: "XL", 10: "X", 9: "IX", 5: "V", 4: "IV", 1: "I"}
+    while num > 0:
+        current = 0
+        # we need to iterate through the dictionary and break when the iter is less than or equal to num
+        # subtract the iter value from num, append the value of iter to result and continue the loop,...
+        # After the while loop is done, we return the joined the result array...
+        for integer in integer_to_roman:
+            if integer <= num:
+                current = integer 
+                break
+        result.append(integer_to_roman[current])
+        num -= current
+    return "".join(result)
+
+print(intToRoman(58))
 # print(can_reach_end([3,3,1,0,2,0,1]))
 # print(buy_and_sell_stock_once([310, 315, 275, 295, 260, 270, 290, 230, 255, 250]))
-print(apply_permutation([2,0,1,3], ["a", "b", "c", "d"]))
+# print(apply_permutation([2,0,1,3], ["a", "b", "c", "d"]))
 # print(add_one_to_list([9,9,9])) 
 # print(add_one_to_list([3, 5, 3]))
