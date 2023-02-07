@@ -57,7 +57,22 @@ def generate_power_set(input_set: list) -> list[list]:
     generate_power_set_helper(0, [])
     return result
 
-print(generate_power_set([0, 1, 2]))
+def palindrome_decomposition(input: str) -> list[list]: #backtracking...
+    def palindrome_decomposition_helper(offset: int, partial_result: list):
+        if offset == len(input):
+            result.append(list(partial_result))
+            return
+        for i in range(offset + 1, len(input) + 1):
+            prefix = input[offset: i]
+            if prefix == prefix[::-1]:
+                palindrome_decomposition_helper(i, partial_result + [prefix])
+
+    result = []
+    palindrome_decomposition_helper(0, [])
+    return result
+
+print(palindrome_decomposition("0204451881"))
+# print(generate_power_set([0, 1, 2]))
 # print(generate_permutation([2,3,5]))
 # print(n_queens(4))
 # print(compute_tower_hanoi(8))
