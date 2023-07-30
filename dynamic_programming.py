@@ -72,7 +72,22 @@ def levenshtein_distance(A: str, B: str):
     return compute_distance_between_prefixes(len(A) - 1, len(B) - 1)
 
 
+def number_of_ways(n: int, m: int) -> int:
+    def compute_number_of_ways_to_xy(x, y):
+        if x == y == 0:
+            return 1
+
+        if number_of_ways[x][y] == 0:
+            ways_top = 0 if x == 0 else compute_number_of_ways_to_xy(x - 1, y)
+            ways_left = 0 if y == 0 else compute_number_of_ways_to_xy(x, y - 1)
+            number_of_ways[x][y] = ways_top + ways_left
+        return number_of_ways[x][y]
+
+    number_of_ways = [[0] * m for _ in range(n)]
+    return compute_number_of_ways_to_xy(n - 1, m - 1)
+
+
 # print(fibonacci_number(8))
 # print(find_maximum_subarray(A))
-print(levenshtein_distance("Saturdays", "Sundays"))
-print(levenshtein_distance("Saturdays", "Saturdays"))
+# print(levenshtein_distance("Saturdays", "Sundays"))
+print(number_of_ways(3, 3))
