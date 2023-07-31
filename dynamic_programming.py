@@ -87,7 +87,41 @@ def number_of_ways(n: int, m: int) -> int:
     return compute_number_of_ways_to_xy(n - 1, m - 1)
 
 
+def is_pattern_contained_in_grid(grid: list[list], S: list) -> bool:
+    def is_pattern_suffix_contained_starting_at_xy(x, y, offset):
+        if len(S) == offset:
+            # Nothing left to complete...
+            return True
+
+        if (
+            (0 <= x < len(grid) and 0 <= y < len(grid[x]))
+            and grid[x][y] == S[offset]
+            and (x, y, offset) not in previous_attempts
+            and any(
+                is_pattern_suffix_contained_starting_at_xy(x + a, y + b, offset + 1)
+                for a, b in ((-1, 0), (1, 0), (0, -1), (0, 1))
+            )
+        ):
+            return True
+
+        previous_attempts.add((x, y, offset))
+        return False
+
+    previous_attempts = set()
+    return any(
+        is_pattern_suffix_contained_starting_at_xy(i, j, 0)
+        for i in range(len(grid))
+        for j in range(len(grid[i]))
+    )
+
+
 # print(fibonacci_number(8))
 # print(find_maximum_subarray(A))
 # print(levenshtein_distance("Saturdays", "Sundays"))
-print(number_of_ways(3, 3))
+# print(number_of_ways(30, 30))
+print(
+    is_pattern_contained_in_grid([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1, 2, 5, 8])
+)  # True...
+print(
+    is_pattern_contained_in_grid([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1, 2, 3, 4])
+)  # False...
