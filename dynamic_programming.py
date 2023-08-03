@@ -1,6 +1,7 @@
 """Dynamic Programming notes..."""
 
 import itertools
+from collections import namedtuple
 
 
 def fibonacci_number(n: int) -> int:
@@ -115,13 +116,56 @@ def is_pattern_contained_in_grid(grid: list[list], S: list) -> bool:
     )
 
 
+Item = namedtuple("Item", ("weight", "value"))
+
+items = [
+    Item(weight=2, value=10),
+    Item(weight=6, value=15),
+    Item(weight=5, value=70),
+    Item(weight=7, value=40),
+]
+
+
+def knapsack_problem(items: list[Item], capacity: int):
+    """Max when a value is picked and when it's not picked"""
+    # Returns the optimum value when we choose from items[:k + 1] and have a
+    # capacity of availabe_capacity.
+    def optimum_subject_to_item_and_capacity(k: int, available_capacity: int):
+        if k < 0:  # No items can be chosen...
+            return 0
+
+        if V[k][available_capacity] == -1:
+            without_curr_item = optimum_subject_to_item_and_capacity(
+                k - 1, available_capacity
+            )
+
+            with_curr_item = (
+                0
+                if available_capacity < items[k].weight
+                else (
+                    items[k].value
+                    + optimum_subject_to_item_and_capacity(
+                        k - 1, available_capacity - items[k].weight
+                    )
+                )
+            )
+
+            V[k][available_capacity] = max(without_curr_item, with_curr_item)
+        return V[k][available_capacity]
+
+    # Unit by Unit (0 to capacity) for the number of items...
+    V = [[-1] * (capacity + 1) for _ in items]
+    return optimum_subject_to_item_and_capacity(len(items) - 1, capacity)
+
+
 # print(fibonacci_number(8))
 # print(find_maximum_subarray(A))
 # print(levenshtein_distance("Saturdays", "Sundays"))
 # print(number_of_ways(30, 30))
-print(
-    is_pattern_contained_in_grid([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1, 2, 5, 8])
-)  # True...
-print(
-    is_pattern_contained_in_grid([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1, 2, 3, 4])
-)  # False...
+# print(
+#     is_pattern_contained_in_grid([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1, 2, 5, 8])
+# )  # True...
+# print(
+#     is_pattern_contained_in_grid([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1, 2, 3, 4])
+# )  # False...
+print(knapsack_problem(items, 10))
