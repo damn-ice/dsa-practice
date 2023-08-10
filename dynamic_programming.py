@@ -158,6 +158,31 @@ def knapsack_problem(items: list[Item], capacity: int):
     return optimum_subject_to_item_and_capacity(len(items) - 1, capacity)
 
 
+def decompose_into_dictionary_words(domain: str, dictionary: list[str]) -> list:
+    last_length = [-1] * len(domain)
+    for i in range(len(domain)):
+        if domain[: i + 1] in dictionary:
+            last_length[i] = i + 1
+
+        if last_length[i] == -1:
+            for j in range(i):
+                # Check if another word exist from last word...
+                if last_length[j] != -1 and domain[j + 1 : i + 1] in dictionary:
+                    last_length[i] = i - j
+                    break
+
+    decomposition = []
+    if last_length[-1] != -1:  # All strings found...
+        idx = len(domain) - 1
+        while idx >= 0:
+            # Append the words in reverse appearance...
+            decomposition.append(domain[idx + 1 - last_length[idx] : idx + 1])
+            idx -= last_length[idx]
+
+        decomposition = decomposition[::-1]
+    return decomposition
+
+
 # print(fibonacci_number(8))
 # print(find_maximum_subarray(A))
 # print(levenshtein_distance("Saturdays", "Sundays"))
@@ -168,4 +193,10 @@ def knapsack_problem(items: list[Item], capacity: int):
 # print(
 #     is_pattern_contained_in_grid([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1, 2, 3, 4])
 # )  # False...
-print(knapsack_problem(items, 10))
+# print(knapsack_problem(items, 10))
+print(
+    decompose_into_dictionary_words(
+        "appleorangebanana", ["apple", "banana", "pear", "orange"]
+    )
+)
+print(decompose_into_dictionary_words("ABABC", ["A", "B", "AB", "C"]))
