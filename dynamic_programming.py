@@ -183,6 +183,32 @@ def decompose_into_dictionary_words(domain: str, dictionary: list[str]) -> list:
     return decomposition
 
 
+def maximum_revenue(coins: list):
+    """Maximum revenue while the opponents is also maximizing"""
+
+    def compute_maximum_revenue_for_range(a: int, b: int):
+        # No coins left...
+        if a > b:
+            return 0
+
+        if maximum_revenue_for_range[a][b] == 0:
+            # Select coin plus the minimum due to opponent also maximizing revenue...
+            max_revenue_a = coins[a] + min(
+                compute_maximum_revenue_for_range(a + 2, b),
+                compute_maximum_revenue_for_range(a + 1, b - 1),
+            )
+
+            max_revenue_b = coins[b] + min(
+                compute_maximum_revenue_for_range(a + 1, b - 1),
+                compute_maximum_revenue_for_range(a, b - 2),
+            )
+            maximum_revenue_for_range[a][b] = max(max_revenue_a, max_revenue_b)
+        return maximum_revenue_for_range[a][b]
+
+    maximum_revenue_for_range = [[0] * len(coins) for _ in coins]
+    return compute_maximum_revenue_for_range(0, len(coins) - 1)
+
+
 # print(fibonacci_number(8))
 # print(find_maximum_subarray(A))
 # print(levenshtein_distance("Saturdays", "Sundays"))
@@ -194,9 +220,10 @@ def decompose_into_dictionary_words(domain: str, dictionary: list[str]) -> list:
 #     is_pattern_contained_in_grid([[1, 2, 3], [4, 5, 6], [7, 8, 9]], [1, 2, 3, 4])
 # )  # False...
 # print(knapsack_problem(items, 10))
-print(
-    decompose_into_dictionary_words(
-        "appleorangebanana", ["apple", "banana", "pear", "orange"]
-    )
-)
-print(decompose_into_dictionary_words("ABABC", ["A", "B", "AB", "C"]))
+# print(
+#     decompose_into_dictionary_words(
+#         "appleorangebanana", ["apple", "banana", "pear", "orange"]
+#     )
+# )
+# print(decompose_into_dictionary_words("ABABC", ["A", "B", "AB", "C"]))
+print(maximum_revenue([5, 25, 10, 1]))
