@@ -209,6 +209,24 @@ def maximum_revenue(coins: list):
     return compute_maximum_revenue_for_range(0, len(coins) - 1)
 
 
+def number_of_ways_to_top(top: int, maximum_step: int) -> int:
+    def compute_number_of_ways_to_h(h: int):
+        if h <= 1:
+            return 1
+
+        if number_of_ways_to_h[h] == 0:
+            number_of_ways_to_h[h] = sum(
+                compute_number_of_ways_to_h(h - i)
+                # The min ensure it's within the range of both max_steps and h...
+                for i in range(1, min(maximum_step, h) + 1)
+            )
+
+        return number_of_ways_to_h[h]
+
+    number_of_ways_to_h = [0] * (top + 1)
+    return compute_number_of_ways_to_h(top)
+
+
 # print(fibonacci_number(8))
 # print(find_maximum_subarray(A))
 # print(levenshtein_distance("Saturdays", "Sundays"))
@@ -226,4 +244,5 @@ def maximum_revenue(coins: list):
 #     )
 # )
 # print(decompose_into_dictionary_words("ABABC", ["A", "B", "AB", "C"]))
-print(maximum_revenue([5, 25, 10, 1]))
+# print(maximum_revenue([5, 25, 10, 1]))
+print(number_of_ways_to_top(4, 2))
