@@ -227,6 +227,28 @@ def number_of_ways_to_top(top: int, maximum_step: int) -> int:
     return compute_number_of_ways_to_h(top)
 
 
+def minimum_messiness(words: list[str], line_length: int) -> int:  # ?
+    num_remaining_blanks = line_length - len(words[0])
+    min_messiness = [num_remaining_blanks**2] + [float("inf")] * (len(words) - 1)
+
+    for i in range(1, len(words)):
+        num_remaining_blanks = line_length - len(words[i])
+        min_messiness[i] = min_messiness[i - 1] + num_remaining_blanks**2
+
+        for j in reversed(range(i)):
+            num_remaining_blanks -= len(words[j]) + 1
+            if num_remaining_blanks < 0:
+                # Not enough space to add more words...
+                break
+            first_j_messiness = 0 if j - 1 < 0 else min_messiness[j - 1]
+            current_line_messiness = num_remaining_blanks**2
+            min_messiness[i] = min(
+                min_messiness[i], first_j_messiness + current_line_messiness
+            )
+
+    return min_messiness[-1]
+
+
 # print(fibonacci_number(8))
 # print(find_maximum_subarray(A))
 # print(levenshtein_distance("Saturdays", "Sundays"))
