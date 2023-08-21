@@ -1,4 +1,4 @@
-"""Dynamic Programming notes..."""
+"""Dynamic Programming notes and practice..."""
 
 import itertools
 from collections import namedtuple
