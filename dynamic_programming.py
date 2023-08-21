@@ -249,6 +249,17 @@ def minimum_messiness(words: list[str], line_length: int) -> int:  # ?
     return min_messiness[-1]
 
 
+def longest_nondecreasing_subsequence_length(A: list) -> int:
+    max_length = [1] * len(A)
+
+    for i in range(1, len(A)):
+        max_length[i] = 1 + max(
+            [max_length[j] for j in range(i) if A[i] >= A[j]], default=0
+        )
+
+    return max(max_length)
+
+
 # print(fibonacci_number(8))
 # print(find_maximum_subarray(A))
 # print(levenshtein_distance("Saturdays", "Sundays"))
@@ -267,4 +278,5 @@ def minimum_messiness(words: list[str], line_length: int) -> int:  # ?
 # )
 # print(decompose_into_dictionary_words("ABABC", ["A", "B", "AB", "C"]))
 # print(maximum_revenue([5, 25, 10, 1]))
-print(number_of_ways_to_top(4, 2))
+# print(number_of_ways_to_top(4, 2))
+print(longest_nondecreasing_subsequence_length([0, 8, 4, 12, 2, 10, 6, 14, 1, 9]))
