@@ -1,5 +1,6 @@
 """Personal study of Greedy Algorithms..."""
 
+import operator
 from collections import namedtuple
 
 PairedTasks = namedtuple("PairedTasks", ("task_1", "task_2"))
@@ -31,5 +32,28 @@ def minimum_total_waiting_time(service_times: list[int]) -> int:
     return total_waiting_time
 
 
+Interval = namedtuple("Interval", ("left", "right"))
+
+intervals = [
+    Interval(1, 3),
+    Interval(4, 6),
+    Interval(3, 5),
+    Interval(10, 12),
+    Interval(2, 15),
+]
+
+
+def minimum_visit(intervals: list[Interval]):
+    intervals.sort(key=operator.attrgetter("right"))
+    last_visit_time, num_visits = float("-inf"), 0
+
+    for interval in intervals:
+        if interval.left > last_visit_time:
+            last_visit_time = interval.right
+            num_visits += 1
+    return num_visits
+
+
 # print(optimum_task_assignment(task))
-print(minimum_total_waiting_time(services))
+# print(minimum_total_waiting_time(services))
+print(minimum_visit(intervals))
