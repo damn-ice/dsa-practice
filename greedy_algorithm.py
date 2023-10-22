@@ -54,6 +54,25 @@ def minimum_visit(intervals: list[Interval]):
     return num_visits
 
 
+search_input = ["a", "b", "b", "a", "c", "b", "b"]
+
+
+def majority_search(input_stream: list):
+    """Majority element must be > 50% input"""
+    candidate, candidate_count = None, 0
+
+    for input in input_stream:
+        if candidate_count == 0:
+            candidate, candidate_count = input, candidate_count + 1
+        elif candidate == input:
+            candidate_count += 1
+        else:
+            candidate_count -= 1
+
+    return candidate
+
+
 # print(optimum_task_assignment(task))
 # print(minimum_total_waiting_time(services))
-print(minimum_visit(intervals))
+# print(minimum_visit(intervals))
+print(majority_search(search_input))
