@@ -72,7 +72,26 @@ def majority_search(input_stream: list):
     return candidate
 
 
+trapped_water_input = [1, 3, 2, 4, 3, 5, 4, 6, 5, 7]
+
+
+def max_trapped_water(heights: list[int]) -> int:
+    i, j, max_water = 0, len(heights) - 1, 0
+
+    while i < j:
+        width = j - i
+        max_water = max(max_water, width * min(heights[i], heights[j]))
+
+        if heights[i] <= heights[j]:
+            i += 1
+        else:
+            j -= 1
+
+    return max_water
+
+
 # print(optimum_task_assignment(task))
 # print(minimum_total_waiting_time(services))
 # print(minimum_visit(intervals))
-print(majority_search(search_input))
+# print(majority_search(search_input))
+print(max_trapped_water(trapped_water_input))
