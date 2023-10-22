@@ -90,8 +90,33 @@ def max_trapped_water(heights: list[int]) -> int:
     return max_water
 
 
+CityAndRemainGas = namedtuple("CityAndRemainGas", ("city", "remaining_gallons"))
+
+gallons = [50, 20, 5, 30, 25, 10, 10]
+distances = [900, 600, 200, 400, 600, 200, 100]
+
+
+def find_ample_city(gallons: list[int], distances: list[int]):
+    """The city with the minimum gallons on entry is the ideal starting point"""
+    MPG = 20
+    remaining_gallons = 0
+
+    # It's okay to start from 0 gallons as the remaining gas will end in 0...
+    # Hence if it doesn't go below zero position 0 is the ideal starting point...
+    city_remaining_gallons_pair = CityAndRemainGas(0, 0)
+    num_cities = len(gallons)
+
+    for i in range(1, num_cities):
+        remaining_gallons += gallons[i - 1] - distances[i - 1] // MPG
+        if remaining_gallons < city_remaining_gallons_pair.remaining_gallons:
+            city_remaining_gallons_pair = CityAndRemainGas(i, remaining_gallons)
+
+    return city_remaining_gallons_pair.city
+
+
 # print(optimum_task_assignment(task))
 # print(minimum_total_waiting_time(services))
 # print(minimum_visit(intervals))
 # print(majority_search(search_input))
-print(max_trapped_water(trapped_water_input))
+# print(max_trapped_water(trapped_water_input))
+print(find_ample_city(gallons, distances))
