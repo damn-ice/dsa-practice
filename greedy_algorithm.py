@@ -114,9 +114,27 @@ def find_ample_city(gallons: list[int], distances: list[int]):
     return city_remaining_gallons_pair.city
 
 
+towers = [1, 2, 3]
+
+
+def calculate_largest_rectangle(heights: list[int]) -> int:
+    pillar_index, max_rectangle_area = [], 0
+
+    for i, h in enumerate(heights + [0]):
+        while pillar_index and heights[pillar_index[-1]] >= h:
+            height = heights[pillar_index.pop()]
+            width = i if not pillar_index else i - pillar_index[-1] - 1
+            max_rectangle_area = max(max_rectangle_area, height * width)
+
+        pillar_index.append(i)
+
+    return max_rectangle_area
+
+
 # print(optimum_task_assignment(task))
 # print(minimum_total_waiting_time(services))
 # print(minimum_visit(intervals))
 # print(majority_search(search_input))
 # print(max_trapped_water(trapped_water_input))
-print(find_ample_city(gallons, distances))
+# print(find_ample_city(gallons, distances))
+print(calculate_largest_rectangle(towers))
