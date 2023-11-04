@@ -130,8 +130,44 @@ def island_count(island: list[list]) -> int:
     return count
 
 
+def minimum_island_count(island: list[list]) -> int:
+    def explore_grid(grid: list[list], row: int, col: int) -> int:
+        row_bounds = 0 <= row and row < len(grid)
+        col_bounds = 0 <= col and col < len(grid[0])
+        pos = (row, col)
+
+        if not row_bounds or not col_bounds:
+            return 0
+
+        if grid[row][col] == "W":
+            return 0
+
+        if pos in visited:
+            return 0
+
+        # Unvisited peace of Land...
+        visited.add(pos)
+        top = explore_grid(grid, row - 1, col)
+        bottom = explore_grid(grid, row + 1, col)
+        left = explore_grid(grid, row, col - 1)
+        right = explore_grid(grid, row, col + 1)
+        return 1 + top + bottom + left + right
+
+    visited = set()
+    min_island = float("inf")
+
+    for row in range(len(island)):
+        for col in range(len(island[row])):
+            current_island = explore_grid(island, row, col)
+            if current_island > 0:
+                min_island = min(min_island, current_island)
+
+    return min_island
+
+
 # depthFirstTraversal(graph, "a")
 # depthFirstTraversalRecursion(graph, "a")
 # breadthFirstTraversal(graph, "a")
 # print(connectedComponents(connected_component_graph))
-print(island_count(island))
+# print(island_count(island))
+print(minimum_island_count(island))
