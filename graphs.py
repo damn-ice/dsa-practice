@@ -86,7 +86,52 @@ def connectedComponents(graph: dict[int, list[int]]) -> int:
     return count
 
 
+island = [
+    ["W", "L", "W", "W", "W"],
+    ["W", "L", "W", "W", "W"],
+    ["W", "W", "W", "L", "W"],
+    ["W", "W", "L", "L", "W"],
+    ["L", "W", "W", "L", "L"],
+    ["L", "L", "W", "W", "W"],
+]
+
+
+def island_count(island: list[list]) -> int:
+    def explore_grid(grid: list[list], row: int, col: int) -> bool:
+        row_bounds = 0 <= row and row < len(grid)
+        col_bounds = 0 <= col and col < len(grid[0])
+        pos = (row, col)
+
+        if not row_bounds or not col_bounds:
+            return False
+
+        if grid[row][col] == "W":
+            return False
+
+        if pos in visited:
+            return False
+
+        # Unvisited peace of Land...
+        visited.add(pos)
+        explore_grid(grid, row - 1, col)
+        explore_grid(grid, row + 1, col)
+        explore_grid(grid, row, col - 1)
+        explore_grid(grid, row, col + 1)
+        return True
+
+    visited = set()
+    count = 0
+
+    for row in range(len(island)):
+        for col in range(len(island[row])):
+            if explore_grid(island, row, col):
+                count += 1
+
+    return count
+
+
 # depthFirstTraversal(graph, "a")
 # depthFirstTraversalRecursion(graph, "a")
 # breadthFirstTraversal(graph, "a")
-print(connectedComponents(connected_component_graph))
+# print(connectedComponents(connected_component_graph))
+print(island_count(island))
