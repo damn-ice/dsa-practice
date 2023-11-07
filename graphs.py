@@ -1,6 +1,6 @@
 """This module contains my personal study of graphs..."""
+from collections import namedtuple
 from queue import Queue
-
 
 graph = {
     "a": ["b", "c"],
@@ -165,9 +165,68 @@ def minimum_island_count(island: list[list]) -> int:
     return min_island
 
 
+Coordinate = namedtuple("Coordinate", ("x", "y"))
+
+maze_sample = [
+    [0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0],
+    [0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0],
+    [0, 0, 0, 1, 0],
+]
+
+start_coor = Coordinate(0, 0)
+end_coor = Coordinate(4, 4)
+
+
+def search_maze(
+    maze: list[list[int]], start: Coordinate, end: Coordinate
+) -> list[Coordinate]:
+    WHITE, BLACK = range(2)
+
+    def search_maze_helper(cur: Coordinate) -> bool:
+        # Check if within bounds and White...
+        if not (
+            0 <= cur.x < len(maze)
+            and 0 <= cur.y < len(maze[cur.x])
+            and maze[cur.x][cur.y] == WHITE
+        ):
+            return False
+
+        path.append(cur)
+        maze[cur.x][cur.y] = BLACK  # Visited so update, memory efficient...
+
+        if cur == end:
+            return True
+
+        if any(
+            map(
+                search_maze_helper,
+                (
+                    Coordinate(cur.x - 1, cur.y),
+                    Coordinate(cur.x + 1, cur.y),
+                    Coordinate(cur.x, cur.y - 1),
+                    Coordinate(cur.x, cur.y + 1),
+                ),
+            )
+        ):
+            return True
+
+        del path[-1]  # Remove entry as no path found...
+
+        return False
+
+    path = []
+    if not search_maze_helper(start):
+        return []
+
+    return path
+
+
 # depthFirstTraversal(graph, "a")
 # depthFirstTraversalRecursion(graph, "a")
 # breadthFirstTraversal(graph, "a")
 # print(connectedComponents(connected_component_graph))
 # print(island_count(island))
-print(minimum_island_count(island))
+# print(minimum_island_count(island))
+print(search_maze(maze_sample, start_coor, end_coor))
