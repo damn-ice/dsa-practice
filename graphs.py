@@ -1,5 +1,5 @@
 """This module contains my personal study of graphs..."""
-from collections import namedtuple
+from collections import deque, namedtuple
 from queue import Queue
 
 graph = {
@@ -223,10 +223,44 @@ def search_maze(
     return path
 
 
+region_A = [
+    ["B", "B", "B", "B"],
+    ["W", "B", "W", "B"],
+    ["B", "W", "W", "B"],
+    ["B", "B", "B", "B"],
+]
+
+region_B = [
+    ["B", "B", "B", "B"],
+    ["W", "W", "W", "B"],
+    ["B", "W", "W", "B"],
+    ["B", "B", "B", "B"],
+]
+
+
+def fill_surrounded_regions(board: list[list]):
+    n, m = len(board), len(board[0])
+
+    q = deque(
+        [(i, j) for k in range(n) for i, j in ((k, 0), (k, m - 1))]
+        + [(i, j) for k in range(m) for i, j in ((0, k), (n - 1, k))]
+    )  # Intialize queue with all boundaries...
+
+    while q:
+        x, y = q.popleft()
+        if 0 <= x < n and 0 <= y < m and board[x][y] == "W":
+            board[x][y] = "T"
+            q.extend([(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)])
+    board[:] = [["B" if col != "T" else "W" for col in row] for row in board]
+    return board
+
+
 # depthFirstTraversal(graph, "a")
 # depthFirstTraversalRecursion(graph, "a")
 # breadthFirstTraversal(graph, "a")
 # print(connectedComponents(connected_component_graph))
 # print(island_count(island))
 # print(minimum_island_count(island))
-print(search_maze(maze_sample, start_coor, end_coor))
+# print(search_maze(maze_sample, start_coor, end_coor))
+print(fill_surrounded_regions(region_A))
+print(fill_surrounded_regions(region_B))
