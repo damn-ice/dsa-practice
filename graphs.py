@@ -223,6 +223,74 @@ def search_maze(
     return path
 
 
+class GraphVertex:
+    def __init__(self):
+        # Distance attribute for BFS traversal
+        self.d = -1
+        # List to store neighboring vertices
+        self.edges = []
+
+
+def is_any_placement(G: list[GraphVertex]):
+    """
+    Checks if it's possible to assign each vertex of the input graph G
+    to one of two sets such that no two connected vertices are in the same set.
+
+    Parameters:
+    - G: List of GraphVertex objects representing the graph.
+
+    Returns:
+    - True if the graph is bipartite, False otherwise.
+    """
+
+    def bfs(s: GraphVertex):
+        """
+        Performs BFS traversal starting from a given vertex s.
+
+        Parameters:
+        - s: Starting vertex for BFS traversal.
+
+        Returns:
+        - False if two vertices at the same distance have an edge between them, indicating a non-bipartite graph.
+        - True otherwise.
+        """
+        # Initialize distance of the source vertex s to 0
+        s.d = 0
+        # Use a deque for BFS queue
+        q = deque([s])
+
+        while q:
+            # Process neighbors of the front vertex in the queue
+            for t in q[0].edges:
+                if t.d == -1:
+                    # If t has not been visited, assign distance and enqueue
+                    t.d = q[0].d + 1
+                    q.append(t)
+                elif t.d == q[0].d:
+                    # If t has the same distance, indicating an edge between vertices at the same level, the graph is not bipartite
+                    return False
+
+            # Dequeue the front vertex
+            del q[0]
+
+        # If the entire traversal is completed without finding any non-bipartite case, return True
+        return True
+
+    # Return True if the BFS traversal succeeds for all unvisited vertices in the graph
+    return all(bfs(v) for v in G if v.d == -1)
+
+
+v1 = GraphVertex()
+v2 = GraphVertex()
+v3 = GraphVertex()
+
+v1.edges = [v2, v3]
+v2.edges = [v1, v3]
+v3.edges = [v2, v1]
+
+G = [v1, v2, v3]
+
+
 region_A = [
     ["B", "B", "B", "B"],
     ["W", "B", "W", "B"],
@@ -262,5 +330,6 @@ def fill_surrounded_regions(board: list[list]):
 # print(island_count(island))
 # print(minimum_island_count(island))
 # print(search_maze(maze_sample, start_coor, end_coor))
-print(fill_surrounded_regions(region_A))
-print(fill_surrounded_regions(region_B))
+# print(fill_surrounded_regions(region_A))
+# print(fill_surrounded_regions(region_B))
+print(is_any_placement(G))
