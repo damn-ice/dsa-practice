@@ -1,4 +1,5 @@
 """This module contains my personal study of graphs..."""
+import string
 from collections import deque, namedtuple
 from queue import Queue
 
@@ -323,6 +324,34 @@ def fill_surrounded_regions(board: list[list]):
     return board
 
 
+transform = {"bat", "cot", "dog", "dag", "dot", "cat"}
+
+
+def transform_string(D: set, s: str, t: str) -> int:
+    StringWithDistance = namedtuple(
+        "StringWithDistance", ("candidate_string", "distance")
+    )
+    q = deque([StringWithDistance(s, 0)])
+    D.remove(s)
+
+    while q:
+        f = q.popleft()
+
+        if f.candidate_string == t:
+            return f.distance
+
+        # Try all possible transformation of f.candidate_string...
+        for i in range(len(f.candidate_string)):
+            for c in string.ascii_lowercase:
+                # Iterate through a to z and changing one letter...
+                cand = f.candidate_string[:i] + c + f.candidate_string[i + 1 :]
+                if cand in D:
+                    q.append(StringWithDistance(cand, f.distance + 1))
+                    D.remove(cand)
+
+    return -1  # No match found...
+
+
 # depthFirstTraversal(graph, "a")
 # depthFirstTraversalRecursion(graph, "a")
 # breadthFirstTraversal(graph, "a")
@@ -332,4 +361,5 @@ def fill_surrounded_regions(board: list[list]):
 # print(search_maze(maze_sample, start_coor, end_coor))
 # print(fill_surrounded_regions(region_A))
 # print(fill_surrounded_regions(region_B))
-print(is_any_placement(G))
+# print(is_any_placement(G))
+print(transform_string(transform, "cat", "dog"))
